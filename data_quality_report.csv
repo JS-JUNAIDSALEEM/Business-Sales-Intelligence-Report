@@ -1,0 +1,13 @@
+Metric,Value
+Rows Before Cleaning,30
+Rows After Cleaning,28
+Rows Removed,2
+Duplicate Records Found,0
+Duplicate OrderIDs Found,1
+Invalid Quantities Found,1
+Invalid Prices Found,1
+Invalid Discounts Found,3
+Invalid or Missing Dates,1
+Missing Values Before Cleaning,4
+Missing Values After Cleaning,1
+Data Validation,PASSED
