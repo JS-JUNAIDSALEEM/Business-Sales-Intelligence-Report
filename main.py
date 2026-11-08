@@ -117,16 +117,16 @@ invalid_quantity_count = int(invalid_quantity.sum())
 print("\nInvalid Quantity Records:")
 print(df[invalid_quantity])
 
-# Remove Zero and Negative Quantities
+# Calculate Median from Valid Quantities
 
-df = df[df["Quantity"] > 0].copy()
+quantity_median = df.loc[df["Quantity"] > 0, "Quantity"].median()
 
 # Fill Missing Quantity
 
-quantity_median = df.loc[df["Quantity"] > 0, "Quantity"].median()
 df["Quantity"] = df["Quantity"].fillna(quantity_median)
 
 # Remove Zero and Negative Quantities
+
 df = df[df["Quantity"] > 0].copy()
 
 # 6. Clean UnitPrice

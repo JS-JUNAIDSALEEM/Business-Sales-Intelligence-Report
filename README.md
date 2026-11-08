@@ -26,20 +26,23 @@ The project uses Pandas and NumPy to process sales records, handle incorrect val
 ## Main Features
 
 ### 1. Dataset Inspection
+
 - Dataset shape and data types
 - Descriptive statistics
 - Missing values
 - Duplicate records and OrderIDs
 
 ### 2. Data Cleaning
+
 - Text standardization
 - Duplicate removal
 - Missing value handling
-- Numeric data correction
+- Numeric data conversion
 - Date conversion
 - Invalid quantity, price, and discount handling
 
 ### 3. Data Validation
+
 - Positive quantity validation
 - Positive unit price validation
 - Discount range validation
@@ -47,17 +50,18 @@ The project uses Pandas and NumPy to process sales records, handle incorrect val
 - Required text field validation
 
 ### 4. Business Analysis
+
 - Total revenue by product
 - Total revenue by city
 - Average revenue by category
 - Monthly revenue analysis
 - Product-by-city revenue pivot table
 - Correlation analysis
-- Revenue outlier detection
+- Revenue outlier detection using the IQR method
 
 ### 5. Report Generation
 
-The project exports the following files:
+The project exports the following CSV files:
 
 - `clean_sales_data.csv`
 - `data_quality_report.csv`
@@ -65,6 +69,8 @@ The project exports the following files:
 - `city_revenue_report.csv`
 - `monthly_revenue_report.csv`
 - `product_city_revenue_report.csv`
+
+All generated reports are saved in the `output` folder.
 
 ## Project Structure
 
@@ -87,25 +93,25 @@ Business-Sales-Intelligence-Report/
 
 ## Installation
 
-Clone the repository:
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/JS-JUNAIDSALEEM/Business-Sales-Intelligence-Report.git
 ```
 
-Open the project folder:
+### 2. Open the Project Folder
 
 ```bash
 cd Business-Sales-Intelligence-Report
 ```
 
-Install the required libraries:
+### 3. Install Required Libraries
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the project:
+### 4. Run the Project
 
 ```bash
 python main.py
@@ -131,6 +137,8 @@ The dataset includes:
 The sample dataset intentionally includes data quality issues for practicing data cleaning and validation.
 
 **Note:** This is synthetic educational data, not actual company sales information.
+
+Invalid dates are converted to missing date values and are excluded from monthly revenue analysis.
 
 ## Learning Outcomes
 
