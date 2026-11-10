@@ -2,9 +2,11 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 import os
 os.makedirs("output", exist_ok=True)
+
 
 # 1. Load Dataset
 
@@ -122,11 +124,10 @@ print(df[invalid_quantity])
 quantity_median = df.loc[df["Quantity"] > 0, "Quantity"].median()
 
 # Fill Missing Quantity
-
+quantity_median = df.loc[df["Quantity"] > 0, "Quantity"].median()
 df["Quantity"] = df["Quantity"].fillna(quantity_median)
 
 # Remove Zero and Negative Quantities
-
 df = df[df["Quantity"] > 0].copy()
 
 # 6. Clean UnitPrice
@@ -294,6 +295,7 @@ outliers = df[(df["NetRevenue"] < lower_limit) | (df["NetRevenue"] > upper_limit
 print("\nNetRevenue Outliers:")
 print(outliers)
 
+
 # 20. Final Business Sales Summary
 
 print("\n========== Final Business Sales Summary ==========")
@@ -301,14 +303,137 @@ print("\n========== Final Business Sales Summary ==========")
 print("\nTotal Orders:", total_orders)
 print("Total Net Revenue:", round(total_revenue, 2))
 print("Average Revenue per Order:", round(average_revenue, 2))
-print("Highest Revenue Product:", product_revenue.idxmax())
-print("Highest Revenue City:", city_revenue.idxmax())
-print("Highest Revenue Category:", df.groupby("Category")["NetRevenue"].sum().idxmax())
-print("Highest Revenue Month:", monthly_revenue.idxmax() if len(monthly_revenue) > 0 else "No valid dates")
+
+# Find Highest Revenue Product
+highest_product = product_revenue.idxmax() if not product_revenue.empty else "No Data"
+highest_product_revenue = product_revenue.max() if not product_revenue.empty else 0
+
+# Find Highest Revenue City
+highest_city = city_revenue.idxmax() if not city_revenue.empty else "No Data"
+highest_city_revenue = city_revenue.max() if not city_revenue.empty else 0
+
+# Find Highest Revenue Category
+category_total_revenue = df.groupby("Category")["NetRevenue"].sum()
+highest_category = category_total_revenue.idxmax() if not category_total_revenue.empty else "No Data"
+
+# Find Highest Revenue Month
+highest_month = monthly_revenue.idxmax() if not monthly_revenue.empty else "No valid dates"
+highest_month_revenue = monthly_revenue.max() if not monthly_revenue.empty else 0
+
+print("\nHighest Revenue Product:", highest_product)
+print("Highest Revenue City:", highest_city)
+print("Highest Revenue Category:", highest_category)
+print("Highest Revenue Month:", highest_month)
 print("Records with Invalid Dates:", invalid_dates)
 print("Potential Revenue Outliers:", len(outliers))
 
-# 21. Export Cleaned Dataset and Reports
+
+# 21. Business Insights and Observations
+
+print("\n========== Business Insights and Observations ==========")
+
+# Product Insight
+
+if highest_product != "No Data":
+    print(f"\n1. Product Insight: {highest_product} generated the highest revenue of Rs. {highest_product_revenue:,.2f}.")
+    print("   The business can investigate its demand and maintain enough stock.")
+
+# City Insight
+
+if highest_city != "No Data":
+    print(f"\n2. City Insight: {highest_city} performed best with revenue of Rs. {highest_city_revenue:,.2f}.")
+    print("   The business can explore more marketing opportunities in this city.")
+
+# Monthly Revenue Insight
+
+if highest_month != "No valid dates":
+    print(f"\n3. Monthly Insight: {highest_month} recorded the highest revenue of Rs. {highest_month_revenue:,.2f}.")
+
+    if len(monthly_revenue) > 1:
+        second_month = monthly_revenue.sort_values(ascending=False).index[1]
+        second_month_revenue = monthly_revenue.sort_values(ascending=False).iloc[1]
+
+        print(f"   {second_month} recorded the second-highest revenue of Rs. {second_month_revenue:,.2f}.")
+
+# Category Insight
+
+if not category_total_revenue.empty:
+    print(f"\n4. Category Insight: {highest_category} generated the highest total revenue among all categories.")
+
+# Next Business Investigation
+
+print("\n5. Recommended Next Steps:")
+print("   - Investigate why the top-performing product generates more revenue.")
+print("   - Explore marketing opportunities in cities with lower revenue.")
+print("   - Compare monthly sales to understand changes in business performance.")
+print("   - Review discounts and revenue outliers to identify unusual sales patterns.")
+
+print("\n==============================================================")
+
+
+# 21. Create Visualizations
+
+# 1. Revenue by Product (Bar Chart)
+
+plt.figure(figsize=(10, 6))
+product_revenue.plot(kind="bar")
+
+plt.title("Revenue by Product")
+plt.xlabel("Product")
+plt.ylabel("Net Revenue")
+plt.xticks(rotation=45)
+plt.grid(axis="y", linestyle="--", alpha=0.5)
+plt.tight_layout()
+
+plt.savefig("output/revenue_by_product.png", dpi=300)
+plt.close()
+
+# 2. Revenue by City (Bar Chart)
+
+plt.figure(figsize=(10, 6))
+city_revenue.plot(kind="bar")
+
+plt.title("Revenue by City")
+plt.xlabel("City")
+plt.ylabel("Net Revenue")
+plt.xticks(rotation=45)
+plt.grid(axis="y", linestyle="--", alpha=0.5)
+plt.tight_layout()
+
+plt.savefig("output/revenue_by_city.png", dpi=300)
+plt.close()
+
+# 3. Monthly Revenue (Line Chart)
+
+plt.figure(figsize=(10, 6))
+monthly_revenue.plot(kind="line", marker="o")
+
+plt.title("Monthly Revenue")
+plt.xlabel("Month")
+plt.ylabel("Net Revenue")
+plt.xticks(rotation=45)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+
+plt.savefig("output/monthly_revenue.png", dpi=300)
+plt.close()
+
+# 4. Revenue Distribution (Histogram)
+
+plt.figure(figsize=(10, 6))
+plt.hist(df["NetRevenue"], bins=10, edgecolor="black")
+
+plt.title("Revenue Distribution")
+plt.xlabel("Net Revenue")
+plt.ylabel("Number of Orders")
+plt.grid(axis="y", linestyle="--", alpha=0.5)
+plt.tight_layout()
+
+plt.savefig("output/revenue_distribution.png", dpi=300)
+plt.close()
+
+
+# 22. Export Cleaned Dataset and Reports
 
 df.to_csv("output/clean_sales_data.csv", index=False)
 quality_report_df.to_csv("output/data_quality_report.csv", index=False)
@@ -321,3 +446,5 @@ print("\n========== Project Execution Complete ==========")
 print("Cleaned dataset exported successfully.")
 print("Data quality report exported successfully.")
 print("Business analysis reports exported successfully.")
+print("Visualizations exported successfully.")
+print("==============================================================")
